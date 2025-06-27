@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ajánlatkészítő</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>Esketési Ajánlatkészítő</h1>
+    <form id="offerForm">
+      <label>Menyasszony neve:
+        <input type="text" name="bride" required>
+      </label>
+      <label>Vőlegény neve:
+        <input type="text" name="groom" required>
+      </label>
+      <label>Esküvő dátuma:
+        <input type="date" name="date" required>
+      </label>
+      <label>Szertartás kezdete:
+        <select name="hour"><option value='00'>00</option><option value='01'>01</option><option value='02'>02</option><option value='03'>03</option><option value='04'>04</option><option value='05'>05</option><option value='06'>06</option><option value='07'>07</option><option value='08'>08</option><option value='09'>09</option><option value='10'>10</option><option value='11'>11</option><option value='12'>12</option><option value='13'>13</option><option value='14'>14</option><option value='15'>15</option><option value='16'>16</option><option value='17'>17</option><option value='18'>18</option><option value='19'>19</option><option value='20'>20</option><option value='21'>21</option><option value='22'>22</option><option value='23'>23</option></select>
+        <select name="minute">
+          <option value="00">00</option>
+          <option value="15">15</option>
+          <option value="30">30</option>
+          <option value="45">45</option>
+        </select>
+      </label>
+      <label>Helyszín:
+        <input type="text" name="location" required>
+      </label>
+      <label>Távolság (km):
+        <input type="number" name="distance" id="distance" required>
+      </label>
+      <label>Magyarországi helyszín:
+        <select name="hungarian" id="hungarian" onchange="toggleForeignFields()">
+          <option value="igen">Igen</option>
+          <option value="nem">Nem</option>
+        </select>
+      </label>
+      <div id="foreignOptions" class="hidden">
+        <label>Mit jelenítsünk meg az ajánlatban:
+          <select name="displayOption" id="displayOption">
+            <option value="km">Km-díj</option>
+            <option value="custom">Egyedi szöveg</option>
+          </select>
+        </label>
+        <label>Egyedi szöveg:
+          <input type="text" name="customText" value="repülő + szállás + egyéb költségek, amit a megrendelő fizet">
+        </label>
+      </div>
+      <label>Vendégek száma:
+        <input type="number" name="guests" required>
+      </label>
+      <label>Csomagválasztás:
+        <select name="selectedPackage">
+          <option value="Alap">Alap</option>
+          <option value="Standard">Standard</option>
+          <option value="Exkluzív">Exkluzív</option>
+        </select>
+      </label>
+      <label>Km-díj (Ft/km):
+        <input type="number" name="kmdij" id="kmdij" value="150">
+      </label>
+      <label>Kiszállási díj:
+        <input type="number" name="kiszalldij" id="kiszalldij" readonly>
+      </label>
+      <button type="button" onclick="generatePDF()">Ajánlat generálása (PDF)</button>
+    </form>
+    <div id="preview" class="hidden"></div>
+  </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
