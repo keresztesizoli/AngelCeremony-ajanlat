@@ -81,6 +81,7 @@
     </label>
     <label>km-díj (Ft): <input name="kmdij" type="number" value="150" /></label>
     <label>Kiszállási díj (Ft): <input name="kiszalldij" type="number" /></label>
+    <button type="button" id="recalcBtn">Kiszállási díj újraszámítása</button>
     <button type="submit">Ajánlat generálása</button>
   </form>
 
@@ -100,25 +101,13 @@
     });
 
     
-    let manualOverride = false;
-    form.kiszalldij.addEventListener("input", () => {
-      manualOverride = true;
-    });
+    document.getElementById("recalcBtn").addEventListener("click", () => {
+    const d = parseFloat(form.distance.value) || 0;
+    const k = parseFloat(form.kmdij.value) || 0;
+    form.kiszalldij.value = Math.ceil(d * 2 * k / 1000) * 1000;
+  });
 
-    form.addEventListener("input", () => {
-      if (!manualOverride) {
-        const d = parseFloat(form.distance.value) || 0;
-        const k = parseFloat(form.kmdij.value) || 0;
-        form.kiszalldij.value = Math.ceil(d * 2 * k / 1000) * 1000;
-      }
-    });
-
-      const d = parseFloat(form.distance.value) || 0;
-      const k = parseFloat(form.kmdij.value) || 0;
-      form.kiszalldij.value = Math.ceil(d * 2 * k / 1000) * 1000;
-    });
-
-    form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const fd = new FormData(form);
       const res = await fetch("/api/generate", {
