@@ -65,5 +65,6 @@ function generatePDF() {
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
-  html2pdf().from(pdfContent).set(opt).save();
+  document.getElementById("pdfContent").innerHTML = pdfContent;
+  html2pdf().from(document.getElementById("pdfContent")).set(opt).save();
 }
