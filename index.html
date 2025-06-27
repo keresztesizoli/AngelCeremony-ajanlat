@@ -80,7 +80,7 @@
       </select>
     </label>
     <label>km-díj (Ft): <input name="kmdij" type="number" value="150" /></label>
-    <label>Kiszállási díj (Ft): <input name="kiszalldij" type="number" readonly /></label>
+    <label>Kiszállási díj (Ft): <input name="kiszalldij" type="number" /></label>
     <button type="submit">Ajánlat generálása</button>
   </form>
 
@@ -92,8 +92,7 @@
     const customTextContainer = document.getElementById("customTextContainer");
 
     hungarianSelect.addEventListener("change", () => {
-      const isHungarian = hungarianSelect.value === "igen";
-      foreignOptions.style.display = isHungarian ? "none" : "block";
+      foreignOptions.style.display = hungarianSelect.value === "nem" ? "block" : "none";
     });
 
     displayOption?.addEventListener("change", () => {
