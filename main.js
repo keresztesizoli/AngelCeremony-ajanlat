@@ -1,46 +1,54 @@
 
-document.getElementById('isHungary').addEventListener('change', function() {
-  const foreignOptions = document.getElementById('foreignOptions');
-  foreignOptions.style.display = this.value === "false" ? "block" : "none";
-  updateDisplayOption();
+function calculateDeliveryFee() {
+    const distance = parseFloat(document.getElementById('distance').value);
+    const kmPrice = parseFloat(document.getElementById('kmPrice').value);
+    if (!isNaN(distance) && !isNaN(kmPrice)) {
+        const fee = Math.round(distance * 2 * kmPrice / 1000) * 1000;
+        document.getElementById('deliveryFee').value = fee;
+    }
+}
+
+document.querySelectorAll('input[name="isHungary"]').forEach(el => {
+    el.addEventListener('change', () => {
+        const isHungary = document.querySelector('input[name="isHungary"]:checked').value;
+        const foreignOptions = document.getElementById('foreignOptions');
+        foreignOptions.style.display = (isHungary === 'no') ? 'block' : 'none';
+    });
 });
 
-document.getElementById('displayOption').addEventListener('change', updateDisplayOption);
+document.querySelectorAll('input[name="foreignDisplay"]').forEach(el => {
+    el.addEventListener('change', () => {
+        const selected = document.querySelector('input[name="foreignDisplay"]:checked').value;
+        const textLabel = document.getElementById('customTextLabel');
+        const textInput = document.getElementById('customText');
+        const show = selected === 'text';
+        textLabel.style.display = show ? 'block' : 'none';
+        textInput.style.display = show ? 'block' : 'none';
+    });
+});
 
-function updateDisplayOption() {
-  const option = document.getElementById('displayOption').value;
-  const label = document.getElementById('customTextLabel');
-  label.style.display = option === 'custom' ? 'block' : 'none';
-}
-
-function calculateDistance() {
-  const d = parseFloat(document.getElementById('distance').value || 0);
-  const k = parseFloat(document.getElementById('kmdij').value || 0);
-  const total = Math.round((d * 2 * k) / 1000) * 1000;
-  document.getElementById('kiszalldij').value = total;
-}
-
-document.getElementById('offerForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const formData = Object.fromEntries(new FormData(this).entries());
-
-  try {
-    const res = await fetch('https://angelceremony-ajanlat-backend.onrender.com/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
+function generatePDF() {
+    const form = document.getElementById("offerForm");
+    const data = {};
+    [...form.elements].forEach(e => {
+        if (e.name) {
+            if (e.type === "radio" && !e.checked) return;
+            data[e.name] = e.value;
+        }
     });
 
-    if (!res.ok) throw new Error('Hiba a PDF generálásban');
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'ajanlat.pdf';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-  } catch (err) {
-    alert("Hiba történt: " + err.message);
-  }
-});
+    fetch("https://angelceremony-ajanlat-backend.onrender.com/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "ajanlat.pdf";
+        a.click();
+    })
+    .catch(err => alert("Hiba a PDF generálásakor: " + err.message));
+}

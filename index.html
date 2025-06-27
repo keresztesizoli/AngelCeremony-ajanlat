@@ -2,70 +2,97 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="UTF-8" />
-  <title>Angel Ceremony Ajánlatkészítő</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <title>Angel Ceremony Ajánlatkészítő</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Esküvői ajánlatkérés</h1>
+    <h1>Angel Ceremony Ajánlatkészítő</h1>
     <form id="offerForm">
-      <label>Menyasszony neve: <input type="text" name="bride" required></label>
-      <label>Vőlegény neve: <input type="text" name="groom" required></label>
-      <label>Esküvő dátuma: <input type="date" name="date" required></label>
-      <label>Szertartás kezdete:
-        <select name="hour" required>
-          <option value="">óra</option>
-          ${[...Array(24).keys()].map(h => `<option value="${String(h).padStart(2, '0')}">${String(h).padStart(2, '0')}</option>`).join('')}
-        </select>
-        :
-        <select name="minute" required>
-          <option value="">perc</option>
-          <option value="00">00</option>
-          <option value="15">15</option>
-          <option value="30">30</option>
-          <option value="45">45</option>
-        </select>
-      </label>
-      <label>Helyszín: <input type="text" name="location" required></label>
-      <label>Helyszín távolsága (km): <input type="number" name="distance" id="distance" required></label>
-      <label>km-díj (Ft/km): <input type="number" name="kmdij" id="kmdij" value="150"></label>
-      <label>Kiszállási díj (Ft): <input type="number" name="kiszalldij" id="kiszalldij" readonly></label>
+        <label for="bride">Menyasszony neve:</label>
+        <input type="text" id="bride" name="bride" required>
 
-      <label>Magyarországi helyszín:
-        <select name="isHungary" id="isHungary">
-          <option value="true" selected>Igen</option>
-          <option value="false">Nem</option>
+        <label for="groom">Vőlegény neve:</label>
+        <input type="text" id="groom" name="groom" required>
+
+        <label for="date">Esküvő dátuma:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="timeHour">Szertartás kezdete – óra:</label>
+        <select id="timeHour" name="timeHour">
+            <option value="00">00</option>
+<option value="01">01</option>
+<option value="02">02</option>
+<option value="03">03</option>
+<option value="04">04</option>
+<option value="05">05</option>
+<option value="06">06</option>
+<option value="07">07</option>
+<option value="08">08</option>
+<option value="09">09</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+<option value="13">13</option>
+<option value="14">14</option>
+<option value="15">15</option>
+<option value="16">16</option>
+<option value="17">17</option>
+<option value="18">18</option>
+<option value="19">19</option>
+<option value="20">20</option>
+<option value="21">21</option>
+<option value="22">22</option>
+<option value="23">23</option>
         </select>
-      </label>
 
-      <div id="foreignOptions" style="display: none;">
-        <label>Ajánlaton megjelenítendő:
-          <select name="displayOption" id="displayOption">
-            <option value="km">Km-díj</option>
-            <option value="custom">Egyedi szöveg</option>
-          </select>
-        </label>
-        <label id="customTextLabel" style="display: none;">
-          Egyedi szöveg:
-          <input type="text" name="customText" id="customText" value="repülő + szállás + egyéb költségek, amit a megrendelő fizet">
-        </label>
-      </div>
-
-      <label>Vendégek száma: <input type="number" name="guests" required></label>
-      <label>Csomagválasztás:
-        <select name="selectedPackage" required>
-          <option value="Alap csomag">Alap csomag</option>
-          <option value="Standard csomag">Standard csomag</option>
-          <option value="Prémium csomag">Prémium csomag</option>
+        <label for="timeMinute">Szertartás kezdete – perc:</label>
+        <select id="timeMinute" name="timeMinute">
+            <option value="00">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
         </select>
-      </label>
 
-      <button type="button" onclick="calculateDistance()">Kiszállási díj számítása</button>
-      <button type="submit">Ajánlat PDF generálása</button>
+        <label for="location">Helyszín:</label>
+        <input type="text" id="location" name="location" required>
+
+        <label for="distance">Helyszín távolsága (km):</label>
+        <input type="number" id="distance" name="distance">
+
+        <label>Magyarországi helyszín:</label>
+        <label><input type="radio" name="isHungary" value="yes" checked> Igen</label>
+        <label><input type="radio" name="isHungary" value="no"> Nem</label>
+
+        <div id="foreignOptions" style="display: none;">
+            <label>Mit szeretnél az ajánlatban?</label>
+            <label><input type="radio" name="foreignDisplay" value="km" checked> km-díj</label>
+            <label><input type="radio" name="foreignDisplay" value="text"> Egyedi szöveg</label>
+
+            <label for="customText" id="customTextLabel" style="display: none;">Egyedi szöveg:</label>
+            <input type="text" id="customText" name="customText" value="repülő + szállás + egyéb költségek, amit a megrendelő fizet" style="display: none;">
+        </div>
+
+        <label for="guests">Vendégek száma:</label>
+        <input type="number" id="guests" name="guests">
+
+        <label for="package">Csomagválasztás:</label>
+        <select id="package" name="package">
+            <option value="alap">Alap</option>
+            <option value="standard">Standard</option>
+            <option value="exkluzív">Exkluzív</option>
+        </select>
+
+        <label for="kmPrice">km-díj (Ft/km):</label>
+        <input type="number" id="kmPrice" name="kmPrice" value="150">
+
+        <label for="deliveryFee">Kiszállási díj (Ft):</label>
+        <input type="number" id="deliveryFee" name="deliveryFee" readonly>
+
+        <button type="button" onclick="calculateDeliveryFee()">Kiszállási díj frissítése</button>
+        <button type="button" onclick="generatePDF()">Ajánlat generálása (PDF)</button>
     </form>
-  </div>
 
-  <script src="main.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
