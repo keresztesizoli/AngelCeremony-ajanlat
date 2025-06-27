@@ -99,7 +99,20 @@
       customTextContainer.style.display = displayOption.value === "custom" ? "block" : "none";
     });
 
+    
+    let manualOverride = false;
+    form.kiszalldij.addEventListener("input", () => {
+      manualOverride = true;
+    });
+
     form.addEventListener("input", () => {
+      if (!manualOverride) {
+        const d = parseFloat(form.distance.value) || 0;
+        const k = parseFloat(form.kmdij.value) || 0;
+        form.kiszalldij.value = Math.ceil(d * 2 * k / 1000) * 1000;
+      }
+    });
+
       const d = parseFloat(form.distance.value) || 0;
       const k = parseFloat(form.kmdij.value) || 0;
       form.kiszalldij.value = Math.ceil(d * 2 * k / 1000) * 1000;
