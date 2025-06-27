@@ -1,6 +1,19 @@
 function toggleForeignFields() {
   const isHungarian = document.getElementById("hungarian").value === "igen";
   document.getElementById("foreignOptions").classList.toggle("hidden", isHungarian);
+  toggleCustomTextVisibility();
+}
+
+function toggleCustomTextVisibility() {
+  const displayOption = document.getElementById("displayOption");
+  const customTextField = displayOption ? document.querySelector("input[name='customText']").parentElement : null;
+  if (customTextField) {
+    customTextField.classList.toggle("hidden", displayOption.value !== "custom");
+  }
+}
+
+  const isHungarian = document.getElementById("hungarian").value === "igen";
+  document.getElementById("foreignOptions").classList.toggle("hidden", isHungarian);
 }
 
 document.getElementById("kmdij").addEventListener("input", calculateFee);
@@ -68,3 +81,4 @@ function generatePDF() {
   document.getElementById("pdfContent").innerHTML = pdfContent;
   html2pdf().from(document.getElementById("pdfContent")).set(opt).save();
 }
+document.getElementById("displayOption").addEventListener("change", toggleCustomTextVisibility);
