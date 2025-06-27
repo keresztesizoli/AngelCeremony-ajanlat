@@ -1,1 +1,123 @@
-HTML tartalom ideiglenesen kihagyva – már mentve volt korábban
+
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Esketési Ajánlat</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f8f8f8;
+      border-radius: 8px;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input, select {
+      padding: 8px;
+      margin-top: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #dccfe3;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <form id="offerForm">
+    <label>Menyasszony neve: <input name="bride" required /></label>
+    <label>Vőlegény neve: <input name="groom" required /></label>
+    <label>Esküvő dátuma: <input name="date" type="date" required /></label>
+    <label>Óra:
+      <select name="hour">
+        <option>00</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option>
+      </select>
+    </label>
+    <label>Perc:
+      <select name="minute">
+        <option>00</option><option>15</option><option>30</option><option>45</option>
+      </select>
+    </label>
+    <label>Helyszín: <input name="location" required /></label>
+    <label>Távolság (km): <input name="distance" type="number" required /></label>
+    <label>Magyarországi helyszín:
+      <select name="hungarian" id="hungarian">
+        <option value="igen">Igen</option>
+        <option value="nem">Nem</option>
+      </select>
+    </label>
+    <div id="foreignOptions" style="display:none;">
+      <label>Ajánlatba:
+        <select name="displayOption" id="displayOption">
+          <option value="km">km-díjat</option>
+          <option value="custom">egyedi szöveget</option>
+        </select>
+      </label>
+      <div id="customTextContainer" style="display:none;">
+        <label>Egyedi szöveg:
+          <input name="customText" value="repülő + szállás + egyéb költségek, amit a megrendelő fizet" />
+        </label>
+      </div>
+    </div>
+    <label>Vendégek száma: <input name="guests" type="number" /></label>
+    <label>Csomag:
+      <select name="selectedPackage">
+        <option value="Alap">Alap</option>
+        <option value="Prémium">Prémium</option>
+        <option value="Extra élmény">Extra élmény</option>
+      </select>
+    </label>
+    <label>km-díj (Ft): <input name="kmdij" type="number" value="150" /></label>
+    <label>Kiszállási díj (Ft): <input name="kiszalldij" type="number" readonly /></label>
+    <button type="submit">Ajánlat generálása</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("offerForm");
+    const hungarianSelect = document.getElementById("hungarian");
+    const foreignOptions = document.getElementById("foreignOptions");
+    const displayOption = document.getElementById("displayOption");
+    const customTextContainer = document.getElementById("customTextContainer");
+
+    hungarianSelect.addEventListener("change", () => {
+      const isHungarian = hungarianSelect.value === "igen";
+      foreignOptions.style.display = isHungarian ? "none" : "block";
+    });
+
+    displayOption?.addEventListener("change", () => {
+      customTextContainer.style.display = displayOption.value === "custom" ? "block" : "none";
+    });
+
+    form.addEventListener("input", () => {
+      const d = parseFloat(form.distance.value) || 0;
+      const k = parseFloat(form.kmdij.value) || 0;
+      form.kiszalldij.value = Math.ceil(d * 2 * k / 1000) * 1000;
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        body: JSON.stringify(Object.fromEntries(fd)),
+        headers: { "Content-Type": "application/json" }
+      });
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    });
+  </script>
+</body>
+</html>
